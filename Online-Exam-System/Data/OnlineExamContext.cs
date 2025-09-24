@@ -2,5 +2,6 @@
 {
     public class OnlineExamContext
     {
+        // This class would typically inherit from DbContext and include DbSet properties for each model.
     }
 }
