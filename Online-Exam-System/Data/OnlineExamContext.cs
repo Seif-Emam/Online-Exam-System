@@ -1,8 +1,37 @@
-﻿namespace Online_Exam_System.Data
+﻿using Microsoft.EntityFrameworkCore;
+using Online_Exam_System.Models;
+using System.Security.Cryptography.X509Certificates;
+
+namespace Online_Exam_System.Data
 {
-    public class OnlineExamContext
+    public class OnlineExamContext : DbContext
     {
-        // This class would typically inherit from DbContext and include DbSet properties for each model
-        // Database connection and configuration would also be set up here
+
+
+        public DbSet<Diploma> Doplomas { set; get; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+           base.OnModelCreating(modelBuilder.ApplyConfigurationsFromAssembly(typeof(OnlineExamContext).Assembly));
+
+           
+        }
+        public OnlineExamContext(DbContextOptions<OnlineExamContext> options) : base(options)
+        {
+
+
+
+
+
+
+
+
+
+        }
+
+        // Add DbSet properties for your entities here
+        // public DbSet<YourEntity> YourEntities { get; set; }
+
+
+
     }
 }
