@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Online_Exam_System
 {
     public class Program
@@ -6,6 +8,12 @@ namespace Online_Exam_System
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<Data.OnlineExamContext>(options =>
+                options.UseSqlServer(connectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
+
+
 
             // Add services to the container.
 
@@ -15,6 +23,7 @@ namespace Online_Exam_System
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
