@@ -8,7 +8,7 @@ namespace Online_Exam_System.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Diploma> builder)
         {
-            builder.HasKey(e => e.id);
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Title)
                 .IsRequired()

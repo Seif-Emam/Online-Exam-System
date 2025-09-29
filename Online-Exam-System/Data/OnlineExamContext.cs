@@ -9,6 +9,7 @@ namespace Online_Exam_System.Data
 
 
         public DbSet<Diploma> Doplomas { set; get; }
+        public DbSet<Exam> Exams { set; get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            base.OnModelCreating(modelBuilder.ApplyConfigurationsFromAssembly(typeof(OnlineExamContext).Assembly));
