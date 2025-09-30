@@ -1,5 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
+using Online_Exam_System.Contarcts;
+using Online_Exam_System.Services;
 
 namespace Online_Exam_System
 {
@@ -21,6 +23,7 @@ namespace Online_Exam_System
             builder.Services.AddDbContext<Data.OnlineExamContext>(options =>
                 options.UseSqlServer(connectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
 
+            builder.Services.AddScoped<IImageHelper, ImageHelper>();
 
             #endregion
 
