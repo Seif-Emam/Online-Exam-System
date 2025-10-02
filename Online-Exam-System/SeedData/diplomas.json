@@ -1,0 +1,17 @@
+[
+  {
+    "Title": "Problem Solving Diploma",
+    "Description": "Build strong problem-solving and logical thinking skills through real coding challenges. Learn to design efficient algorithms and apply structured thinking to solve real-world software problems.",
+    "PictureUrl": "/images/diplomas/ProblemSolvingDiploma.jpg"
+  },
+  {
+    "Title": "Advanced Frontend Diploma",
+    "Description": "Master modern frontend development with Angular and React. Learn performance optimization, state management, and build scalable, accessible user interfaces for professional web apps.",
+    "PictureUrl": "/images/diplomas/FrontendDiploma.jpg"
+  },
+  {
+    "Title": "Advanced Backend Diploma",
+    "Description": "Learn backend engineering with .NET Core, SOLID principles, and clean architecture. Master API design, database optimization, and caching for building secure, high-performance systems.",
+    "PictureUrl": "/images/diplomas/BackendDiploma.jpg"
+  }
+]
