@@ -1,7 +1,11 @@
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Online_Exam_System.Contarcts;
+using Online_Exam_System.Features.Exam.GetAll;
+using Online_Exam_System.Repositories;
 using Online_Exam_System.Services;
+using System.Reflection;
 
 namespace Online_Exam_System
 {
@@ -22,8 +26,13 @@ namespace Online_Exam_System
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<Data.OnlineExamContext>(options =>
                 options.UseSqlServer(connectionString, opts => opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
-
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IImageHelper, ImageHelper>();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddMemoryCache();
+            builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllExamHandler)));
+
+
 
             #endregion
 
@@ -43,6 +52,7 @@ namespace Online_Exam_System
             app.MapControllers();
 
             #endregion
+
             app.Run();
         }
     }

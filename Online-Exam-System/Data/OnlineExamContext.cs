@@ -14,7 +14,6 @@ namespace Online_Exam_System.Data
         {
            base.OnModelCreating(modelBuilder.ApplyConfigurationsFromAssembly(typeof(OnlineExamContext).Assembly));
 
-           
         }
         public OnlineExamContext(DbContextOptions<OnlineExamContext> options) : base(options)
         {
