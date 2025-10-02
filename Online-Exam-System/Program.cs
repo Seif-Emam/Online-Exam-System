@@ -45,6 +45,7 @@ namespace Online_Exam_System
                 {
                     var context = services.GetRequiredService<OnlineExamContext>();
                     await DiplomaSeeder.SeedDiplomasAsync(context);
+                    await ExamSeeder.SeedExamsAsync(context);
                 }
                 catch (Exception ex)
                 {
