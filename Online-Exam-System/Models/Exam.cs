@@ -9,5 +9,6 @@
         public TimeOnly duration { get; set; }
 
         //add -after relations Diploma Dropdownlist
+        //
     }
 }
