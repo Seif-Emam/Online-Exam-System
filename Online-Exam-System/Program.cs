@@ -5,6 +5,7 @@ using Online_Exam_System.Data;
 using Online_Exam_System.Data.Seed;
 using Online_Exam_System.Features.Exam.AddExam;
 using Online_Exam_System.Features.Exam.GetAll;
+using Online_Exam_System.Features.Exam.UpdateExam;
 using Online_Exam_System.Repositories;
 using Online_Exam_System.Services;
 using System.Reflection;
@@ -31,6 +32,7 @@ namespace Online_Exam_System
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IImageHelper, ImageHelper>();
             builder.Services.AddScoped<IAddExamOrchestrator, AddExamOrchestrator>();
+            builder.Services.AddScoped<IUpdateExamOrchestrator, UpdateExamOrchestrator>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddMemoryCache();
             builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllExamHandler)));
