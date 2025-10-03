@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Contarcts;
 using Online_Exam_System.Features.Exam.AddExam;
@@ -18,14 +19,17 @@ namespace Online_Exam_System.Features.Exam
         private readonly IMediator _mediator;
         private readonly IAddExamOrchestrator _addExamOrchestrator;
         private readonly IUpdateExamOrchestrator _updateExamOrchestrator;
+        private readonly IDeleteExamCommandOrchestrator _deleteExamOrchestrator;
 
         public ExamController(IMediator mediator,
             IAddExamOrchestrator addExamOrchestrator ,
-            IUpdateExamOrchestrator updateExamOrchestrator)
+            IUpdateExamOrchestrator updateExamOrchestrator,
+            IDeleteExamCommandOrchestrator deleteExamOrchestrator)
         {
             _mediator = mediator;
             _addExamOrchestrator = addExamOrchestrator;
             _updateExamOrchestrator = updateExamOrchestrator;
+            _deleteExamOrchestrator = deleteExamOrchestrator;
         }
 
         [HttpGet]
@@ -62,5 +66,13 @@ namespace Online_Exam_System.Features.Exam
             return Ok(Exam);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteExam(Guid id)
+        {
+            var Exam =await _deleteExamOrchestrator.DeleteExamAsync(id);
+            if (!Exam)
+                return NotFound();
+            return NoContent();
+        }
     }
 }
