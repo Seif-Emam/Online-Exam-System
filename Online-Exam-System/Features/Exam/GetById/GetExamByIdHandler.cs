@@ -33,7 +33,7 @@ namespace Online_Exam_System.Features.Exam.GetById
                     PictureUrl = exam.PictureUrl,
                     StartDate = exam.StartDate,
                     EndDate = exam.EndDate,
-                    Duration = exam.duration
+                    Duration = exam.Duration
                 };
             }
             catch (KeyNotFoundException)

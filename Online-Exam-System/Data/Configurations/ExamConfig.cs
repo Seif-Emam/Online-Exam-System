@@ -28,7 +28,7 @@ namespace Online_Exam_System.Data.Configurations
                     v => v.ToDateTime(TimeOnly.MinValue),
                     v => DateOnly.FromDateTime(v));
 
-            builder.Property(e => e.duration)
+            builder.Property(e => e.Duration)
                 .HasConversion(
                     v => v.ToTimeSpan(),
                     v => TimeOnly.FromTimeSpan(v));

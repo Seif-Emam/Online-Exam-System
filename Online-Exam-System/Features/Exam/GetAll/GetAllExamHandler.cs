@@ -53,7 +53,7 @@ namespace Online_Exam_System.Features.Exam.GetAll
 
                 // ⏱ Filter by Duration (minutes)
                 if (request.Parameters.Duration.HasValue)
-                    query = query.Where(e => e.duration.ToTimeSpan().TotalMinutes == request.Parameters.Duration.Value);
+                    query = query.Where(e => e.Duration.ToTimeSpan().TotalMinutes == request.Parameters.Duration.Value);
 
                 var totalCount = query.Count();
 
@@ -71,7 +71,7 @@ namespace Online_Exam_System.Features.Exam.GetAll
                         PictureUrl = e.PictureUrl,
                         StartDate = e.StartDate,
                         EndDate = e.EndDate,
-                        Duration = e.duration
+                        Duration = e.Duration
                     })
                     .ToList();
 

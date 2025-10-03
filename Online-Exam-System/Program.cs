@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Online_Exam_System.Contarcts;
 using Online_Exam_System.Data;
 using Online_Exam_System.Data.Seed;
+using Online_Exam_System.Features.Exam.AddExam;
 using Online_Exam_System.Features.Exam.GetAll;
 using Online_Exam_System.Repositories;
 using Online_Exam_System.Services;
@@ -29,6 +30,7 @@ namespace Online_Exam_System
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IImageHelper, ImageHelper>();
+            builder.Services.AddScoped<IAddExamOrchestrator, AddExamOrchestrator>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddMemoryCache();
             builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllExamHandler)));
@@ -37,7 +39,7 @@ namespace Online_Exam_System
 
             var app = builder.Build();
 
-            // ✅ Seeding section
+            #region Seeding section
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -53,6 +55,7 @@ namespace Online_Exam_System
                     logger.LogError(ex, "❌ Error while seeding Diplomas");
                 }
             }
+            #endregion
 
             #region Configure Middleware
 

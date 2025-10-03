@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Exam_System.Contarcts;
+using Online_Exam_System.Features.Exam.AddExam;
 using Online_Exam_System.Features.Exam.GetAll;
 using Online_Exam_System.Features.Exam.GetById;
 using Online_Exam_System.Shared;
@@ -13,10 +15,12 @@ namespace Online_Exam_System.Features.Exam
     {
 
         private readonly IMediator _mediator;
+        private readonly IAddExamOrchestrator _examOrchestrator;
 
-        public ExamController(IMediator mediator)
+        public ExamController(IMediator mediator, IAddExamOrchestrator examOrchestrator)
         {
             _mediator = mediator;
+            _examOrchestrator = examOrchestrator;
         }
 
         [HttpGet]
@@ -35,6 +39,13 @@ namespace Online_Exam_System.Features.Exam
             var Quere = new GetExamByIdQuerey(Id);
             var data = await _mediator.Send(Quere);
             return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<AddExamDTO>> AddExam([FromForm]AddExamRequest request)
+        {
+            var Exam = await _examOrchestrator.AddExamAsync(request);
+            return Ok(Exam);
         }
 
     }
