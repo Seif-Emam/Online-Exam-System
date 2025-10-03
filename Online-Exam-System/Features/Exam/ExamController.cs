@@ -5,6 +5,7 @@ using Online_Exam_System.Contarcts;
 using Online_Exam_System.Features.Exam.AddExam;
 using Online_Exam_System.Features.Exam.GetAll;
 using Online_Exam_System.Features.Exam.GetById;
+using Online_Exam_System.Features.Exam.UpdateExam;
 using Online_Exam_System.Shared;
 
 namespace Online_Exam_System.Features.Exam
@@ -15,12 +16,16 @@ namespace Online_Exam_System.Features.Exam
     {
 
         private readonly IMediator _mediator;
-        private readonly IAddExamOrchestrator _examOrchestrator;
+        private readonly IAddExamOrchestrator _addExamOrchestrator;
+        private readonly IUpdateExamOrchestrator _updateExamOrchestrator;
 
-        public ExamController(IMediator mediator, IAddExamOrchestrator examOrchestrator)
+        public ExamController(IMediator mediator,
+            IAddExamOrchestrator addExamOrchestrator ,
+            IUpdateExamOrchestrator updateExamOrchestrator)
         {
             _mediator = mediator;
-            _examOrchestrator = examOrchestrator;
+            _addExamOrchestrator = addExamOrchestrator;
+            _updateExamOrchestrator = updateExamOrchestrator;
         }
 
         [HttpGet]
@@ -44,7 +49,16 @@ namespace Online_Exam_System.Features.Exam
         [HttpPost]
         public async Task<ActionResult<AddExamDTO>> AddExam([FromForm]AddExamRequest request)
         {
-            var Exam = await _examOrchestrator.AddExamAsync(request);
+            var Exam = await _addExamOrchestrator.AddExamAsync(request);
+            return Ok(Exam);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UpdateExamDTO>> UpdateExam (Guid id , [FromForm] UpdateExamRequest request)
+        {
+            var Exam = await _updateExamOrchestrator.UpdateExamAsync(id, request);
+            if (Exam == null)
+                return NotFound();
             return Ok(Exam);
         }
 
