@@ -8,7 +8,10 @@ namespace Online_Exam_System.Features.Exam.AddExam
     {
         public async Task<AddExamDTO> Handle(AddExamCommend request, CancellationToken cancellationToken)
         {
-            var rebo = unitOfWork.GetRepository<Models.Exam>();
+            try
+            {
+
+                var rebo = unitOfWork.GetRepository<Models.Exam>();
             var exam = new Models.Exam
             {
                 Title = request.Title,
@@ -29,6 +32,11 @@ namespace Online_Exam_System.Features.Exam.AddExam
                 EndDate = exam.EndDate,
                 Duration = exam.Duration
             };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while adding the exam.", ex);
+            }
         }
     }
 }
