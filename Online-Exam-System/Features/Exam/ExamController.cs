@@ -67,12 +67,14 @@ namespace Online_Exam_System.Features.Exam
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteExam(Guid id)
+        public async Task<ActionResult> DeleteExam(Guid id )
         {
             var Exam =await _deleteExamOrchestrator.DeleteExamAsync(id);
-            if (!Exam)
-                return NotFound();
-            return NoContent();
+                return Ok(new
+                {
+                    message = "Diploma deleted successfully (soft delete).",
+                    success = Exam
+                });
         }
     }
 }

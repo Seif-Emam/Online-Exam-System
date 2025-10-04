@@ -20,10 +20,14 @@ namespace Online_Exam_System.Features.Exam.GetAll
         {
             try
             {
-                // ✅ Cache check
-                if (!_cache.TryGetValue("AllExams", out IEnumerable<Models.Exam> exams))
+                IEnumerable<Models.Exam> exams;
+
+                // ✅ Always store detached data (ToList)
+                if (!_cache.TryGetValue("AllExams", out exams))
                 {
-                    exams = await _unitOfWork.GetRepository<Models.Exam>().GetAllAsync();
+                    exams = _unitOfWork.GetRepository<Models.Exam>()
+                        .GetAll()
+                        .ToList(); // Detach from DbContext
 
                     if (exams == null || !exams.Any())
                         throw new KeyNotFoundException("No exams found.");
@@ -31,9 +35,8 @@ namespace Online_Exam_System.Features.Exam.GetAll
                     _cache.Set("AllExams", exams, TimeSpan.FromMinutes(5));
                 }
 
-                var query = exams;
+                var query = exams.AsQueryable();
 
-                // 🔍 Search
                 if (!string.IsNullOrWhiteSpace(request.Parameters.Search))
                 {
                     var search = request.Parameters.Search.Trim();
@@ -43,21 +46,17 @@ namespace Online_Exam_System.Features.Exam.GetAll
                     );
                 }
 
-                // 🗓 Filter by StartDate
                 if (request.Parameters.StartDate.HasValue)
                     query = query.Where(e => e.StartDate >= request.Parameters.StartDate.Value);
 
-                // 🗓 Filter by EndDate
                 if (request.Parameters.EndDate.HasValue)
                     query = query.Where(e => e.EndDate <= request.Parameters.EndDate.Value);
 
-                // ⏱ Filter by Duration (minutes)
                 if (request.Parameters.Duration.HasValue)
                     query = query.Where(e => e.Duration.ToTimeSpan().TotalMinutes == request.Parameters.Duration.Value);
 
                 var totalCount = query.Count();
 
-                // 📄 Pagination
                 int pageSize = request.Parameters.PageSize <= 0 ? 10 : request.Parameters.PageSize;
                 int pageNumber = request.Parameters.PageNumber <= 0 ? 1 : request.Parameters.PageNumber;
 
@@ -85,12 +84,10 @@ namespace Online_Exam_System.Features.Exam.GetAll
             }
             catch (KeyNotFoundException)
             {
-                // ⚠️ Let middleware handle 404
                 throw;
             }
             catch (Exception ex)
             {
-                // 💥 Unexpected error (500)
                 throw new ApplicationException("An error occurred while fetching the list of exams.", ex);
             }
         }
