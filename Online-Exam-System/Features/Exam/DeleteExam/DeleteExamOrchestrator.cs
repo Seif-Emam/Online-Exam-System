@@ -6,7 +6,7 @@ using Online_Exam_System.Services;
 
 namespace Online_Exam_System.Features.Exam.DeleteExam
 {
-    public   class DeleteExamOrchestrator(IMediator mediator, IImageHelper imageHelper) : IDeleteExamCommandOrchestrator
+    public class DeleteExamOrchestrator(IMediator mediator, IImageHelper imageHelper) : IDeleteExamCommandOrchestrator
     {
         public async Task<bool> DeleteExamAsync(Guid id)
         {
