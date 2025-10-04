@@ -15,7 +15,7 @@ namespace Online_Exam_System.Features.Diploma.GetAllDiplomas
             {
                 if (!_cache.TryGetValue("AllDiplomas", out IEnumerable<Models.Diploma> diplomas))
                 {
-                    diplomas = await _unitOfWork.GetRepository<Models.Diploma>().GetAllAsync();
+                    diplomas =  _unitOfWork.GetRepository<Models.Diploma>().GetAll();
                     _cache.Set("AllDiplomas", diplomas, TimeSpan.FromMinutes(5));
                 }
 
