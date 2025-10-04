@@ -41,11 +41,11 @@ namespace Online_Exam_System.Features.Exam
         }
 
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
 
-        public async Task<ActionResult> GetExamById(Guid Id)
+        public async Task<ActionResult> GetExamById(Guid id)
         {
-            var Quere = new GetExamByIdQuerey(Id);
+            var Quere = new GetExamByIdQuerey(id);
             var data = await _mediator.Send(Quere);
             return Ok(data);
         }
