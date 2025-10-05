@@ -9,6 +9,7 @@ namespace Online_Exam_System.Features.Exam.AddExam
         {
             var PicUrl =await imageHelper.SaveImageAsync(request.PictureUrl, "Exams");
             return await mediator.Send(new AddExamCommend(
+                request.DiplomaId,
                 request.Title,
                 request.Duration,
                 request.StartDate,

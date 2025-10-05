@@ -7,5 +7,8 @@
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public TimeOnly Duration { get; set; }
+
+        public Guid DiplomaId { get; set; }
+
     }
 }

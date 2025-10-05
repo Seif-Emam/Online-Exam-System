@@ -6,6 +6,8 @@
         public  string? Description { set; get; }
         public  string? PictureUrl { set; get; }
 
+        public ICollection<Exam>? Exams { set; get; } = new List<Exam>();
+
 
 
 

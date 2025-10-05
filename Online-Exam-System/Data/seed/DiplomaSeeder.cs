@@ -9,7 +9,7 @@ namespace Online_Exam_System.Data.Seed
         public static async Task SeedDiplomasAsync(OnlineExamContext context)
         {
             // ✅ لو الجدول فيه بيانات، ما نكررش
-            if (await context.Doplomas.AnyAsync())
+            if (await context.Diplomas.AnyAsync())
                 return;
 
             // 📂 المسار الكامل لملف JSON
@@ -40,7 +40,7 @@ namespace Online_Exam_System.Data.Seed
             }
 
             // 💾 إضافة البيانات
-            await context.Doplomas.AddRangeAsync(diplomas);
+            await context.Diplomas.AddRangeAsync(diplomas);
             await context.SaveChangesAsync();
         }
     }

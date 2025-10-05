@@ -1,4 +1,5 @@
-﻿using Online_Exam_System.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Online_Exam_System.Models;
 using System.Text.Json;
 
 namespace Online_Exam_System.Data.Seed
@@ -7,8 +8,14 @@ namespace Online_Exam_System.Data.Seed
     {
         public static async Task SeedExamsAsync(OnlineExamContext context)
         {
-            if (context.Exams.Any())
+            // ✅ لو فيه امتحانات قبل كده، ما تكررش
+            if (await context.Exams.AnyAsync())
                 return;
+
+            // ✅ تأكد إن فيه دبلومات متسجلة
+            var diplomas = await context.Diplomas.ToListAsync();
+            if (!diplomas.Any())
+                throw new Exception("❌ No diplomas found. Please seed diplomas first.");
 
             try
             {
@@ -23,6 +30,17 @@ namespace Online_Exam_System.Data.Seed
 
                 if (exams == null || !exams.Any())
                     throw new InvalidOperationException("No valid exam data found in seed file.");
+
+                // 🧠 اربط كل امتحان بدبلومة موجودة فعلاً
+                var random = new Random();
+                foreach (var exam in exams)
+                {
+                    exam.Id = Guid.NewGuid(); // يولد ID جديد للامتحان
+                    exam.DiplomaId = diplomas[random.Next(diplomas.Count)].Id; // ✅ يربطه بدبلومة حقيقية
+                    exam.CreatedAt = DateTime.UtcNow;
+                    exam.UpdatedAt = DateTime.UtcNow;
+                    exam.IsDeleted = false;
+                }
 
                 await context.Exams.AddRangeAsync(exams);
                 await context.SaveChangesAsync();
