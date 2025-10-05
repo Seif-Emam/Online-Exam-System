@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Online_Exam_System.Data;
 
@@ -11,9 +12,11 @@ using Online_Exam_System.Data;
 namespace Online_Exam_System.Data.Migrations
 {
     [DbContext(typeof(OnlineExamContext))]
-    partial class OnlineExamContextModelSnapshot : ModelSnapshot
+    [Migration("20251005084956_Relation Between Diploma and Exam")]
+    partial class RelationBetweenDiplomaandExam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace Online_Exam_System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Diplomas");
+                    b.ToTable("Doplomas");
                 });
 
             modelBuilder.Entity("Online_Exam_System.Models.Exam", b =>

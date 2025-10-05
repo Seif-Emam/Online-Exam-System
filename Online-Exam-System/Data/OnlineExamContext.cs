@@ -8,7 +8,7 @@ namespace Online_Exam_System.Data
     {
 
 
-        public DbSet<Diploma> Doplomas { set; get; }
+        public DbSet<Diploma> Diplomas { set; get; }
         public DbSet<Exam> Exams { set; get; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
