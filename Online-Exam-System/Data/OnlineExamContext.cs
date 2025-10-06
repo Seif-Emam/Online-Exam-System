@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Online_Exam_System.Models;
+using Online_Exam_System.Models.Questions;
 
 namespace Online_Exam_System.Data
 {
@@ -10,6 +11,9 @@ namespace Online_Exam_System.Data
         // DbSets
         public DbSet<Diploma> Diplomas { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Choice> Choices { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         public OnlineExamContext(DbContextOptions<OnlineExamContext> options)
             : base(options)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Online_Exam_System.Models.Questions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Online_Exam_System.Models
 {
@@ -11,12 +12,13 @@ namespace Online_Exam_System.Models
         public TimeOnly Duration { get; set; }
         public Guid? UserId { get; set; }
 
+        #region Relations
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
         public Guid DiplomaId { get; set; }           // Foreign Key
         public Diploma? Diploma { get; set; }
 
-        //add -after relations Diploma Dropdownlist
-        //
+        public ICollection<Question> Questions { get; set; }
+        #endregion
     }
 }
