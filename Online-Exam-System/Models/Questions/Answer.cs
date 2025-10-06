@@ -2,10 +2,10 @@
 {
     public class Answer : BaseEntity
     {
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
         public Question Question { get; set; } = default!;
 
-        public int ChoiceId { get; set; }
+        public Guid ChoiceId { get; set; }
         public Choice Choice { get; set; } = default!;
 
         public string UserId { get; set; } = default!;

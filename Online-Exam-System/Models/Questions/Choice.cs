@@ -6,7 +6,7 @@
         public bool IsCorrect { get; set; }
 
         #region relations
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
         public Question Question { get; set; } = default!;
         #endregion
     }
