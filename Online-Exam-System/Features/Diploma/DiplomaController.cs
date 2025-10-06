@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Contarcts;
@@ -52,33 +53,42 @@ namespace Online_Exam_System.Features.Diploma
 
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<AddDiplomaDTO>> AddDiploma([FromForm] AddDiplomaRequest request)
         {
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to add diplomas.");
 
             var result = await _addDiplomaOrchestrator.AddDiplomaAsync(request);
             return Ok(new
             {
-                Message = "Diploma added successfully",
-
-                Data = result
-
+                message = "Diploma added successfully",
+                data = result
             });
-
-
-
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateDiploma( Guid id ,[FromForm] UpdateDiplomaRequest request)
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<ActionResult> UpdateDiploma(Guid id, [FromForm] UpdateDiplomaRequest request)
         {
-            var result = await _updateDiplomaOrchestrator.UpdateDiplomaAsync(id,request);
-            return Ok(new { message = "Diploma updated successfully ", data = result });
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to update diplomas.");
+
+            var result = await _updateDiplomaOrchestrator.UpdateDiplomaAsync(id, request);
+            return Ok(new
+            {
+                message = "Diploma updated successfully",
+                data = result
+            });
         }
 
-
         [HttpDelete("{id:guid}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteDiploma(Guid id)
         {
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to delete diplomas.");
+
             var result = await _deleteDiplomaOrchestrator.DeleteDiplomaAsync(id);
             return Ok(new
             {
@@ -86,6 +96,7 @@ namespace Online_Exam_System.Features.Diploma
                 success = result
             });
         }
+
     }
 }
 
