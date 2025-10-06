@@ -34,11 +34,18 @@ namespace Online_Exam_System.Features.Auth.Login
 
             return new LoginResponse
             {
-                Token = token,
+                Success = true,
+                Message = "Login successful",
+                UserId = user.Id,
+                UserName= user.UserName,
+                FirstName = user.FirstName,
+                lastName = user.LastName,
                 FullName = $"{user.FirstName} {user.LastName}",
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 ProfileImageUrl = user.ProfileImageUrl,
-                Roles = roles
+                Roles = roles,
+                Token = token
             };
         }
     }

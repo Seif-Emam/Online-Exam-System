@@ -3,10 +3,16 @@
     public record RegisterResponse(
          bool Success,
          string Message,
-         string Token,
+         Guid UserId,
+         string UserName,
+         string FirstName,
+         string LastName,
          string FullName,
+         string PhoneNumber,
          string Email,
          string ProfileImageUrl,
-         IList<string> Roles // ✅ جديد
-     );
+         IList<string> Roles ,
+         string Token
+
+        );
 }

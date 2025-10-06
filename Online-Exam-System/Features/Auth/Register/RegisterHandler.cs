@@ -55,7 +55,7 @@ namespace Online_Exam_System.Features.Auth.Register
             var roles = await _userManager.GetRolesAsync(user);
             var token = _tokenService.GenerateToken(user, roles);
 
-            return new RegisterResponse(true, "Registration successful", token, user.FullName, user.Email, user.ProfileImageUrl, roles);
+            return new RegisterResponse(true, "Registration successful", user.Id , user.UserName, user.FirstName , user.LastName , user.FullName, user.Email, user.PhoneNumber ,user.ProfileImageUrl, roles , token );
         }
 
 

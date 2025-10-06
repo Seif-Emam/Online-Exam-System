@@ -10,6 +10,7 @@ using Online_Exam_System.Data;
 using Online_Exam_System.Data.Seed;
 using Online_Exam_System.Features.Auth.Login.Online_Exam_System.Features.Auth.Login;
 using Online_Exam_System.Features.Auth.Register;
+using Online_Exam_System.Features.Auth.UpdateUserProfile;
 using Online_Exam_System.Features.Diploma.AddDiploma;
 using Online_Exam_System.Features.Diploma.DeleteDiploma;
 using Online_Exam_System.Features.Diploma.UpdateDiploma;
@@ -146,6 +147,7 @@ namespace Online_Exam_System
             builder.Services.AddScoped<IAddDiplomaOrchestrator, AddDiplomaOrchestrator>();
             builder.Services.AddScoped<IUpdateDiplomaOrchestrator, UpdateDiplomaOrchestrator>();
             builder.Services.AddScoped<IDeleteDiplomaOrchestrator, DeleteDiplomaOrchestrator>();
+            builder.Services.AddScoped<UpdateUserProfileOrchestrator>();
             builder.Services.AddScoped<ITokenService, JwtService>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddMemoryCache();
