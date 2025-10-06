@@ -21,6 +21,17 @@ namespace Online_Exam_System.Data.Configurations
             builder.Property(e => e.PictureUrl)
                   .IsRequired(false);
 
+
+            builder.HasMany(d => d.Exams)
+                   .WithOne(e => e.Diploma)
+                   .HasForeignKey(e => e.DiplomaId);
+
+            builder.HasOne(d => d.User)
+                   .WithMany(u => u.Diplomas)
+                   .HasForeignKey(d => d.UserId)
+                   .OnDelete(DeleteBehavior.SetNull);
+
+
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using FluentValidation;
 
 namespace Online_Exam_System.Middlewares
 {
@@ -39,7 +39,12 @@ namespace Online_Exam_System.Middlewares
                         {
                             statusCode = (int)statusCode,
                             message = "Validation failed.",
-                            errors = new[] { new { PropertyName = "N/A", ErrorMessage = validationEx.Message } }
+                            errors = validationEx.Errors
+                                .Select(e => new
+                                {
+                                    Field = e.PropertyName.Replace("RegisterDto.", ""),
+                                    e.ErrorMessage
+                                })
                         };
                         break;
 
@@ -61,13 +66,27 @@ namespace Online_Exam_System.Middlewares
                         };
                         break;
 
-                    case UnauthorizedAccessException:
-                        statusCode = HttpStatusCode.Unauthorized;
-                        errorResponse = new
+                    case UnauthorizedAccessException unauthorizedEx:
+                        // 401 = لم يُسجل دخول المستخدم
+                        // 403 = لا يملك صلاحية (Forbidden)
+                        if (context.User.Identity?.IsAuthenticated ?? false)
                         {
-                            statusCode = (int)statusCode,
-                            message = "Unauthorized access."
-                        };
+                            statusCode = HttpStatusCode.Forbidden; // 403
+                            errorResponse = new
+                            {
+                                statusCode = (int)statusCode,
+                                message = "You do not have permission to perform this action."
+                            };
+                        }
+                        else
+                        {
+                            statusCode = HttpStatusCode.Unauthorized; // 401
+                            errorResponse = new
+                            {
+                                statusCode = (int)statusCode,
+                                message = "Invalid email or password."
+                            };
+                        }
                         break;
 
                     default:
@@ -82,7 +101,6 @@ namespace Online_Exam_System.Middlewares
                 }
 
                 context.Response.StatusCode = (int)statusCode;
-
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
                 var json = JsonSerializer.Serialize(errorResponse, options);
 

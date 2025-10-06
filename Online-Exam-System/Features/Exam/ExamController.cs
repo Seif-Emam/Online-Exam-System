@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Contarcts;
 using Online_Exam_System.Features.Exam.AddExam;
@@ -62,15 +63,23 @@ namespace Online_Exam_System.Features.Exam
         }
 
         [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<AddExamDTO>> AddExam([FromForm] AddExamRequest request)
         {
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to perform this action.");
+
             var exam = await _addExamOrchestrator.AddExamAsync(request);
             return Ok(exam);
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<UpdateExamDTO>> UpdateExam(Guid id, [FromForm] UpdateExamRequest request)
         {
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to perform this action.");
+
             var exam = await _updateExamOrchestrator.UpdateExamAsync(id, request);
             if (exam == null)
                 return NotFound();
@@ -79,8 +88,12 @@ namespace Online_Exam_System.Features.Exam
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> DeleteExam(Guid id)
         {
+            if (!User.IsInRole("Admin"))
+                throw new UnauthorizedAccessException("You do not have permission to perform this action.");
+
             var result = await _deleteExamOrchestrator.DeleteExamAsync(id);
 
             return Ok(new

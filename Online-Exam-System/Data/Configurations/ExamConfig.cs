@@ -33,6 +33,18 @@ namespace Online_Exam_System.Data.Configurations
                     v => v.ToTimeSpan(),
                     v => TimeOnly.FromTimeSpan(v));
 
+
+            builder.HasOne(e => e.Diploma)
+                   .WithMany(d => d.Exams)
+                   .HasForeignKey(e => e.DiplomaId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(e => e.User)
+                   .WithMany(u => u.Exams)
+                   .HasForeignKey(e => e.UserId)
+                   .OnDelete(DeleteBehavior.SetNull);
+
+
         }
     }
 }
