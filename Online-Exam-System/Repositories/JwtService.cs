@@ -7,8 +7,6 @@ using System.Text;
 
 namespace Online_Exam_System.Repositories
 {
-
-
     public class JwtService : ITokenService
     {
         private readonly IConfiguration _config;
@@ -21,11 +19,11 @@ namespace Online_Exam_System.Repositories
         public string GenerateToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            {
+                new Claim("id", user.Id.ToString()),                     // <--- مهم هنا
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             foreach (var role in roles)
             {
@@ -36,8 +34,8 @@ namespace Online_Exam_System.Repositories
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-             issuer: _config["JwtSettings:Issuer"],
-           audience: _config["JwtSettings:Audience"],
+                issuer: _config["JwtSettings:Issuer"],
+                audience: _config["JwtSettings:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds
@@ -46,5 +44,4 @@ namespace Online_Exam_System.Repositories
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-
 }

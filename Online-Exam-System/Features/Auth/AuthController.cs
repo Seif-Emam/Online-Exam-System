@@ -1,8 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Exam_System.Features.Auth.ChangePassword;
+using Online_Exam_System.Features.Auth.GetCurrentUser;
 using Online_Exam_System.Features.Auth.Login;
 using Online_Exam_System.Features.Auth.Register;
+using Online_Exam_System.Features.Auth.UpdateUserProfile;
 
 namespace Online_Exam_System.Features.Auth
 {
@@ -12,9 +16,12 @@ namespace Online_Exam_System.Features.Auth
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public AuthController(IMediator mediator) { 
+        private readonly UpdateUserProfileOrchestrator _updateUserProfileOrchestrator;  
+        public AuthController(IMediator mediator , UpdateUserProfileOrchestrator updateUserProfileOrchestrator) { 
         
             _mediator = mediator;
+            _updateUserProfileOrchestrator = updateUserProfileOrchestrator;
+
 
         }
 
@@ -36,6 +43,42 @@ namespace Online_Exam_System.Features.Auth
         {
             var result = await _mediator.Send(command);
             return Ok(result);
+        }
+
+        [HttpGet("user-info")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { statusCode = 401, message = "Invalid token or not authenticated." });
+
+            var result = await _mediator.Send(new GetCurrentUserQuery(userId));
+            return Ok(result);
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result, message = "Password changed successfully." });
+        }
+
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateUserProfileRequest request)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { statusCode = 401, message = "Invalid token or not authenticated." });
+
+            var response = await _updateUserProfileOrchestrator.UpdateUserProfileAsync(
+                Guid.Parse(userId),
+                request
+            );
+
+            return Ok(response);
         }
 
     }
