@@ -11,5 +11,7 @@ namespace Online_Exam_System.Contarcts
         IQueryable<TEntity> GetAll(bool trackChanges = false);
         IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression, bool trackChanges = false);
         Task<TEntity?> GetByIdAsync(Guid id);
+
+        
     }
 }
