@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Features.Qestion.GetAllQuestions;
+using Online_Exam_System.Features.Qestion.GetQuestionById;
+using Online_Exam_System.Features.Qestion.GetQuestionTypes;
 using Online_Exam_System.Shared;
+using QuestionDto = Online_Exam_System.Features.Qestion.GetAllQuestions.QuestionDto;
 
 namespace Online_Exam_System.Features.Qestion
 {
@@ -23,5 +26,21 @@ namespace Online_Exam_System.Features.Qestion
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<QuestionDto>> GetQuestionById(Guid id)
+        {
+            var query = new GetQuestionByIdQuery(id);
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<List<QuestionTypeDto>>> GetQuestionTypes()
+        {
+            var result = await _mediator.Send(new GetQuestionTypesQuery());
+            return Ok(result);
+        }
+
     }
 }
