@@ -20,7 +20,7 @@ namespace Online_Exam_System.Features.Qestion
             _mediator = mediator;
         }
 
-        [HttpPost("GetAll")]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<PagedResult<QuestionDto>>> GetAllQuestions([FromForm] GetAllQuestionsQuery query)
         {
             var result = await _mediator.Send(query);
