@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Features.Auth.ChangePassword;
+using Online_Exam_System.Features.Auth.ForgetPassword.OTP;
+using Online_Exam_System.Features.Auth.ForgetPassword.ResetPassword;
 using Online_Exam_System.Features.Auth.GetCurrentUser;
 using Online_Exam_System.Features.Auth.Login;
 using Online_Exam_System.Features.Auth.Register;
@@ -80,6 +82,28 @@ namespace Online_Exam_System.Features.Auth
 
             return Ok(response);
         }
+
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgetPassword([FromBody] SendOtpCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result, message = "OTP sent successfully to your email." });
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result, message = "OTP verified successfully." });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(new { success = result, message = "Password reset successfully." });
+        }
+
 
     }
 }
