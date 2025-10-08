@@ -149,6 +149,7 @@ namespace Online_Exam_System
             builder.Services.AddScoped<IDeleteDiplomaOrchestrator, DeleteDiplomaOrchestrator>();
             builder.Services.AddScoped<UpdateUserProfileOrchestrator>();
             builder.Services.AddScoped<ITokenService, JwtService>();
+            builder.Services.AddScoped<IMailKitEmailService, MailKitEmailService>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddMemoryCache();
 
