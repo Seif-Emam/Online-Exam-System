@@ -14,6 +14,7 @@
         public string? ProfileImageUrl { get; set; }
         public IEnumerable<string>? Roles { get; set; }
         public string Token { get; set; }
+        public string? RefreshToken { get; set; }
 
     }
 }
