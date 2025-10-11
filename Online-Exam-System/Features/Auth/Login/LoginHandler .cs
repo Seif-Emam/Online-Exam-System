@@ -26,18 +26,16 @@ namespace Online_Exam_System.Features.Auth.Login
             if (!isPasswordValid)
                 throw new UnauthorizedAccessException("Invalid email or password.");
 
-            // ✅ Get roles
+            // 🔥 Pass RememberMe here
+            var (accessToken, refreshToken) = await _tokenService.GenerateTokensAsync(user, request.RememberMe);
             var roles = await _userManager.GetRolesAsync(user);
-
-            // ✅ Generate JWT using TokenService
-            var token = _tokenService.GenerateToken(user, roles);
 
             return new LoginResponse
             {
                 Success = true,
                 Message = "Login successful",
                 UserId = user.Id,
-                UserName= user.UserName,
+                UserName = user.UserName,
                 FirstName = user.FirstName,
                 lastName = user.LastName,
                 FullName = $"{user.FirstName} {user.LastName}",
@@ -45,7 +43,8 @@ namespace Online_Exam_System.Features.Auth.Login
                 PhoneNumber = user.PhoneNumber,
                 ProfileImageUrl = user.ProfileImageUrl,
                 Roles = roles,
-                Token = token
+                Token = accessToken,
+                RefreshToken = refreshToken
             };
         }
     }

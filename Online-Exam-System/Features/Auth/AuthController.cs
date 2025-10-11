@@ -7,6 +7,7 @@ using Online_Exam_System.Features.Auth.ForgetPassword.OTP;
 using Online_Exam_System.Features.Auth.ForgetPassword.ResetPassword;
 using Online_Exam_System.Features.Auth.GetCurrentUser;
 using Online_Exam_System.Features.Auth.Login;
+using Online_Exam_System.Features.Auth.Logout;
 using Online_Exam_System.Features.Auth.Register;
 using Online_Exam_System.Features.Auth.UpdateUserProfile;
 
@@ -102,6 +103,22 @@ namespace Online_Exam_System.Features.Auth
         {
             var result = await _mediator.Send(command);
             return Ok(new { success = result, message = "Password reset successfully." });
+        }
+
+
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized(new { message = "Invalid token." });
+
+            var userId = Guid.Parse(userIdClaim);
+            var result = await _mediator.Send(new LogoutCommand(userId));
+
+            return Ok(result);
         }
 
 

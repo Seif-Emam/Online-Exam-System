@@ -22,22 +22,32 @@ namespace Online_Exam_System.Features.Auth.UpdateUserProfile
             if (user == null)
                 throw new KeyNotFoundException("User not found.");
 
-            // تحديث البيانات لو متاحة
-            user.FirstName = request.FirstName ?? user.FirstName;
-            user.LastName = request.LastName ?? user.LastName;
-            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
-            user.ProfileImageUrl = request.ProfileImage ?? user.ProfileImageUrl;
+            // ✅ Update user fields if provided
+            if (!string.IsNullOrWhiteSpace(request.FirstName))
+                user.FirstName = request.FirstName;
 
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
+            if (!string.IsNullOrWhiteSpace(request.LastName))
+                user.LastName = request.LastName;
+
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+                user.PhoneNumber = request.PhoneNumber;
+
+            if (!string.IsNullOrWhiteSpace(request.ProfileImage))
+                user.ProfileImageUrl = request.ProfileImage;
+
+            user.FullName = $"{user.FirstName} {user.LastName}";
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                var errors = string.Join("; ", updateResult.Errors.Select(e => e.Description));
                 throw new InvalidOperationException($"Failed to update profile: {errors}");
             }
 
-            // ✅ Generate new token if needed
+            // ✅ Generate new tokens after profile update
+            // ✅ Generate new tokens after profile update
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _tokenService.GenerateToken(user, roles);
+            var tokens = await _tokenService.GenerateTokensAsync(user, false); // false = no rememberMe
 
             return new UpdateUserProfileResponse
             {
@@ -47,14 +57,14 @@ namespace Online_Exam_System.Features.Auth.UpdateUserProfile
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 lastName = user.LastName,
-                FullName = $"{user.FirstName} {user.LastName}",
+                FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 ProfileImageUrl = user.ProfileImageUrl,
                 Roles = roles,
-                Token = token
+                Token = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken
             };
         }
     }
-
 }

@@ -12,7 +12,7 @@
          string Email,
          string ProfileImageUrl,
          IList<string> Roles ,
-         string Token
-
+         string Token,
+         string? RefreshToken
         );
 }

@@ -9,9 +9,12 @@ namespace Online_Exam_System.Features.Auth.Register
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-        private readonly ITokenService _tokenService; // ✅ جديد
+        private readonly ITokenService _tokenService;
 
-        public RegisterHandler(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService)
+        public RegisterHandler(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole<Guid>> roleManager,
+            ITokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -22,12 +25,12 @@ namespace Online_Exam_System.Features.Auth.Register
         {
             var dto = request.RegisterDto;
 
-            // Check if user exists
+            // 🔍 Check if user already exists
             var existingUser = await _userManager.FindByEmailAsync(dto.Email);
             if (existingUser != null)
                 throw new ApplicationException("Email already registered.");
 
-            // Create user
+            // 🧠 Create new ApplicationUser
             var user = new ApplicationUser
             {
                 FirstName = dto.FirstName,
@@ -37,8 +40,11 @@ namespace Online_Exam_System.Features.Auth.Register
                 UserName = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 EmailConfirmed = true,
-                ProfileImageUrl = "/images/users/default-user.png"
+                ProfileImageUrl = "/images/users/default-user.png",
+                CreatedAt = DateTime.UtcNow
             };
+
+            // 🔑 Create user in Identity
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
             {
@@ -46,19 +52,33 @@ namespace Online_Exam_System.Features.Auth.Register
                 throw new ApplicationException($"User creation failed: {errors}");
             }
 
-
-            // Add Role
+            // 👤 Assign default role
             if (await _roleManager.RoleExistsAsync("User"))
                 await _userManager.AddToRoleAsync(user, "User");
 
-            // Generate JWT
+            // 🎭 Get roles
             var roles = await _userManager.GetRolesAsync(user);
-            var token = _tokenService.GenerateToken(user, roles);
 
-            return new RegisterResponse(true, "Registration successful", user.Id , user.UserName, user.FirstName , user.LastName , user.FullName, user.Email, user.PhoneNumber ,user.ProfileImageUrl, roles , token );
+            // ✅ Generate Access + Refresh Tokens (RememberMe optional from DTO if available)
+            bool rememberMe = dto.RememberMe; // Add this property in RegisterDto if not already
+            var (accessToken, refreshToken) = await _tokenService.GenerateTokensAsync(user, rememberMe);
+
+            // 🧾 Return final response
+            return new RegisterResponse(
+                Success: true,
+                Message: "Registration successful",
+                UserId: user.Id,
+                UserName: user.UserName,
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                FullName: user.FullName,
+                Email: user.Email,
+                PhoneNumber: user.PhoneNumber,
+                ProfileImageUrl: user.ProfileImageUrl,
+                Roles: roles,
+                Token: accessToken,
+                RefreshToken: refreshToken
+            );
         }
-
-
-
     }
 }
