@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Exam_System.Features.Qestion.CreateQuestion;
+using Online_Exam_System.Features.Qestion.DeleteQustion;
 using Online_Exam_System.Features.Qestion.GetAllQuestions;
 using Online_Exam_System.Features.Qestion.GetQuestionById;
 using Online_Exam_System.Features.Qestion.GetQuestionTypes;
@@ -57,6 +58,18 @@ namespace Online_Exam_System.Features.Qestion
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteQuestion(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteQuestionCommand(id));
+
+            if (!result)
+                return NotFound();
+
+            return NoContent();
+        }
+
 
     }
 }
