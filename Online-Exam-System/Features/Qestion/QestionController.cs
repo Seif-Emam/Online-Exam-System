@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Online_Exam_System.Features.Qestion.CreateQuestion;
 using Online_Exam_System.Features.Qestion.GetAllQuestions;
 using Online_Exam_System.Features.Qestion.GetQuestionById;
 using Online_Exam_System.Features.Qestion.GetQuestionTypes;
@@ -41,6 +42,14 @@ namespace Online_Exam_System.Features.Qestion
             var result = await _mediator.Send(new GetQuestionTypesQuery());
             return Ok(result);
         }
+
+        [HttpPost("Create")]
+        public async Task<ActionResult<QuestionDto>> CreateQuestion([FromBody] CreateQuestionCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
 
     }
 }
