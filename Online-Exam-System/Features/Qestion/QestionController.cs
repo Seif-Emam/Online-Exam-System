@@ -5,6 +5,7 @@ using Online_Exam_System.Features.Qestion.CreateQuestion;
 using Online_Exam_System.Features.Qestion.GetAllQuestions;
 using Online_Exam_System.Features.Qestion.GetQuestionById;
 using Online_Exam_System.Features.Qestion.GetQuestionTypes;
+using Online_Exam_System.Features.Qestion.UpdateQustions;
 using Online_Exam_System.Shared;
 using QuestionDto = Online_Exam_System.Features.Qestion.GetAllQuestions.QuestionDto;
 
@@ -50,6 +51,12 @@ namespace Online_Exam_System.Features.Qestion
             return Ok(result);
         }
 
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update([FromBody] UpdateQuestionCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
 
     }
 }
